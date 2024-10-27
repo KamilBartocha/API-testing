@@ -12,7 +12,7 @@ from helpers import (
     get_api_token
 )
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def api_token():
     return get_api_token()
 

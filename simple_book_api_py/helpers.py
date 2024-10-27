@@ -1,19 +1,22 @@
 import requests
-import random
+import uuid
 
 BASE_URL = "https://simple-books-api.glitch.me"
+API_TOKEN = None
 
 def get_api_token():
-    url = f"{BASE_URL}/api-clients/"
-    rand_int = random.randint(1000, 9999)
-    payload = {
-        "clientName": f"api_client{rand_int}",
-        "clientEmail": f"api_client{rand_int}@example.com"
-    }
-    response = requests.post(url, json=payload)
-    response.raise_for_status()
-    token = response.json()['accessToken']
-    return token
+    global API_TOKEN
+    if API_TOKEN is None:
+        url = f"{BASE_URL}/api-clients/"
+        unique_id = uuid.uuid4().hex
+        payload = {
+            "clientName": f"api_client-{unique_id}",
+            "clientEmail": f"api_client-{unique_id}@example.com"
+        }
+        response = requests.post(url, json=payload)
+        response.raise_for_status()
+        API_TOKEN = response.json()['accessToken']
+    return API_TOKEN
 
 def get_status():
     return requests.get(f"{BASE_URL}/status")
